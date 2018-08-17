@@ -29,6 +29,11 @@ class StudentViewSet(viewsets.ModelViewSet):
     """
     queryset = Student.objects.all().order_by('id')
     serializer_class = StudentSerializer
+    def get_queryset(self):
+        if self.kwargs:
+            return Student.objects.filter(school= self.kwargs['schools_pk']).order_by('id')
+        else:
+            return Student.objects.all().order_by('id')
 class SchoolViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -36,8 +41,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     queryset = School.objects.all().order_by('id')
     serializer_class = SchoolSerializer
     # def get_queryset(self):
-    #     return Student.objects.all().order_by('id')
-        # filter(school=self.kwargs['school'])
+    #     return Student.objects.filter(school=self.kwargs['school']).order_by('id')
 
     # def get_serializer_class(self):
     #     # if self.action == 'list' or self.action == 'retrieve':

@@ -16,17 +16,29 @@ Including another URLconf
 from django.conf.urls import url, include
 # from rest_framework import routers
 from rest_framework_nested import routers
-from my_app import views
+
+
+
 from django.conf.urls import url
 from django.contrib import admin
+from my_app import views
+# from views import SchoolViewSet, StudentViewSet
 
-router = routers.DefaultRouter()
 
+# router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 # router.register(r'users', views.UserViewSet)
 # router.register(r'groups', views.GroupViewSet)
 
 router.register(r'schools', views.SchoolViewSet)
 router.register(r'students', views.StudentViewSet)
+
+# do nested url
+school_router = routers.NestedSimpleRouter(router, r'schools', lookup='schools')
+school_router.register(r'students', views.StudentViewSet, base_name='students')
+
+# student_router = routers.NestedSimpleRouter(router, r'students', lookup='student')
+# student_router.register(r'students', views.StudentViewSet, base_name='students')
 
 
 # router.register(r'schools', views.SchoolViewSet, base_name=)
@@ -36,8 +48,9 @@ router.register(r'students', views.StudentViewSet)
 urlpatterns = [
 	url(r'^', include(router.urls)),
 	# url(r'^api/', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
- #    url(r'^admin/', admin.site.urls),
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	#    url(r'^admin/', admin.site.urls),
+    url(r'^', include(school_router.urls)),
    ]
 # urlpatterns += router.urls
 

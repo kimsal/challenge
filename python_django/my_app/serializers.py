@@ -11,7 +11,7 @@ class StudentSerializer(NestedHyperlinkedModelSerializer):
     }
     class Meta:
         model = Student
-        fields = ('first_name', 'last_name', 'student_identification', 'school')
+        fields = ('id', 'first_name', 'last_name', 'student_identification', 'school')
     def create(self, validated_data):
         """
         Create and return a new `Student` instance, given the validated data.
@@ -20,9 +20,6 @@ class StudentSerializer(NestedHyperlinkedModelSerializer):
             raise APIException("Maximum Students Reached!")
         else:
             instance = Student.objects.create(**validated_data)
-            # student_datas = validated_data.pop('students')
-            # for student in student_datas:
-            #     Student.objects.create(student)
             return instance
 
     def update(self, instance, validated_data):
@@ -40,15 +37,47 @@ class StudentSerializer(NestedHyperlinkedModelSerializer):
             return instance
 
 class SchoolSerializer(NestedHyperlinkedModelSerializer):
-    # students = serializers.HyperlinkedRelatedField(many=True, view_name='students', queryset=Student.objects.all())
+    # students = serializers.HyperlinkedRelatedField(many=True, view_name='students', queryset=[])
     # , read_only=True, view_name='students'
     students = StudentSerializer(many= True,read_only=True)
+    
     class Meta:
         model = School
-        fields = ('name', 'maximum_students', 'students')
-    # students = NestedHyperlinkedRelatedField(
-    #     many=True,
-    #     read_only= True,
-    #     view_name='students',
-    #     parent_lookup_kwargs={'students': 'students'}
-    # )
+        fields = ('id', 'name', 'maximum_students', 'students')
+    def create(self, validated_data):
+        """
+        Create and return a new `School` instance, given the validated data.
+        """
+        instance = School.objects.create(**validated_data)
+        students = self.data.get('students')    
+        # print str(validated_data)
+        if(students):
+            for student in students:
+                Student.objects.create(school=instance, **student)
+        return instance
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `School` instance, given the validated data.
+        """
+        # print str(self.data.get('students'))
+        instance.name = validated_data.get('name', instance.name)
+        instance.maximum_students = validated_data.get('maximum_students', instance.maximum_students)
+        instance.save()
+        students = self.data.get('students')
+        if(students):
+            for student in students:
+                students_id = student.get('id', None)
+                print str(students)
+                if students_id:                   
+                    inv_students = Student.objects.filter(id=students_id).last()
+                    inv_students.first_name = student.get('first_name', inv_students.first_name)
+                    inv_students.last_name = student.get('last_name', inv_students.last_name)
+                    inv_students.student_identification = student.get('student_identification', inv_students.student_identification)
+                    inv_students.school = instance
+                    print str(student.get('last_name'))
+                    inv_students.save()
+                else:
+                    print 'add new'
+                    Student.objects.create(school=instance, **student)
+        return instance

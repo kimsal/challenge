@@ -24,7 +24,7 @@ class Student(models.Model):
   first_name= models.CharField(max_length=20)
   last_name= models.CharField(max_length=20)
   student_identification= models.CharField(max_length=20, unique=True, default= getUniqueString)
-  school= models.ForeignKey(School,  related_name='students', editable=True ,on_delete=models.CASCADE,null=False,blank=False)
+  school= models.ForeignKey(School,  related_name='students', editable=True ,on_delete=models.CASCADE)
 
   # def get_absolute_url(self):
   #     return ('Student', (), {'first_name': self.first_name,'last_name': self.last_name,'student_identification': self.student_identification,'school': self.school})
