@@ -59,7 +59,7 @@
   </v-layout>
   <v-layout v-else-if="selectedSource">
     <v-alert
-      :value="selectedSource"
+      value="true"
       type="warning"
     >
       No data found for {{selectedSource.name}} !
@@ -91,6 +91,9 @@ export default {
         .then(response => (this.sources = response.data.sources));
   },
   watch: {
+    '$store.getters.getSelectedSource': function(value){
+      this.selectedSource = value;
+    },
     datas: function (value){
       if(value && value.articles){
         this.articles = value.articles;
@@ -102,9 +105,10 @@ export default {
   },  
   methods: {
     filterData: function (selected){
-      this.selectedSource= selected;
+      // set state SelectedSource
+      this.$store.dispatch('setSelectedSource', selected);
       this.articles  = _.filter(this.datas.articles, function(article, key) {
-        console.log(article.source.id +'=='+ selected.id);
+        console.log(article.source.id+"-"+ selected.id);
         return article.source.id == selected.id;
       });
     }
