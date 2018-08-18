@@ -11,7 +11,7 @@ class StudentSerializer(NestedHyperlinkedModelSerializer):
     }
     class Meta:
         model = Student
-        fields = ('id', 'first_name', 'last_name', 'student_identification', 'school')
+        fields = ('id', 'first_name', 'last_name', 'student_identification', 'school', 'nationality', 'age')
     def create(self, validated_data):
         """
         Create and return a new `Student` instance, given the validated data.
@@ -43,7 +43,7 @@ class SchoolSerializer(NestedHyperlinkedModelSerializer):
     
     class Meta:
         model = School
-        fields = ('id', 'name', 'maximum_students', 'students')
+        fields = ('id', 'name', 'maximum_students', 'students', 'location')
     def create(self, validated_data):
         """
         Create and return a new `School` instance, given the validated data.

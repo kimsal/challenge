@@ -8,6 +8,7 @@ def getUniqueString():
 class School(models.Model):
   id=models.AutoField(primary_key=True)
   name=models.CharField(max_length=20)
+  location=models.CharField(max_length=100, blank=True, null=True)
   maximum_students = models.PositiveIntegerField(default=0)
   # students = PrimaryKeyRelatedField(queryset=Student.objects.all())
   # def get_absolute_url(self):
@@ -25,7 +26,8 @@ class Student(models.Model):
   last_name= models.CharField(max_length=20)
   student_identification= models.CharField(max_length=20, unique=True, default= getUniqueString)
   school= models.ForeignKey(School,  related_name='students', editable=True ,on_delete=models.CASCADE)
-
+  nationality=models.CharField(max_length=20, blank=True, null=True)
+  age=models.PositiveIntegerField(default=0)
   # def get_absolute_url(self):
   #     return ('Student', (), {'first_name': self.first_name,'last_name': self.last_name,'student_identification': self.student_identification,'school': self.school})
   # def save(self):
