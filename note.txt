@@ -1,0 +1,5 @@
+note tasks:
+-Python Faker library to generate random data 
+-date (vue)
+-check pipenv
+-insert/update nested data

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from .models import Student, School
 from my_app.serializers import SchoolSerializer, StudentSerializer
+from django.db.models import Q
 # Create your views here.
 
 # class UserViewSet(viewsets.ModelViewSet):
@@ -36,6 +37,9 @@ class StudentViewSet(viewsets.ModelViewSet):
             datas= Student.objects.filter(school= self.kwargs['schools_pk']).all()
         else:
             datas= Student.objects.all()
+        if params.get('search'):
+            datas= datas.filter(Q(first_name=params.get('search')) | Q(last_name=params.get('search'))| Q(nationality=params.get('search'))| Q(age=params.get('search')))
+        
         if params.get('first_name') :
             # print 'query first name:'+params.get('first_name')
             datas= datas.filter(last_name = params.get('first_name'))
@@ -58,6 +62,8 @@ class SchoolViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         params = self.request.query_params
         datas= School.objects.all()
+        if params.get('search'):
+            datas= datas.filter(Q(name=params.get('search')) | Q(location=params.get('search')))
         if params.get('name'):
             datas= datas.filter(name = params.get('name'))
         if params.get('location'):
