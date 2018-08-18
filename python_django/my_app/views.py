@@ -30,19 +30,40 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all().order_by('id')
     serializer_class = StudentSerializer
     def get_queryset(self):
+        params = self.request.query_params
+        # return []
         if self.kwargs:
-            return Student.objects.filter(school= self.kwargs['schools_pk']).order_by('id')
+            datas= Student.objects.filter(school= self.kwargs['schools_pk']).all()
         else:
-            return Student.objects.all().order_by('id')
+            datas= Student.objects.all()
+        if params.get('first_name', False) :
+            # print 'query first name:'+params.get('first_name')
+            datas= datas.filter(last_name = params.get('first_name'))
+        if params.get('last_name', False):
+            # print 'query last name:'+ params.get('last_name')
+            datas= datas.filter(last_name = params.get('last_name'))
+        if params.get('age', False):
+            # print 'query age:'+params.get('age')
+            datas= datas.filter(age = params.get('age'))
+        if params.get('nationality', False):
+            # print 'query nationality:'+params.get('nationality')
+            datas= datas.filter(nationality = params.get('nationality'))
+        return datas.order_by('id')
 class SchoolViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     queryset = School.objects.all().order_by('id')
     serializer_class = SchoolSerializer
-    # def get_queryset(self):
-    #     return Student.objects.filter(school=self.kwargs['school']).order_by('id')
-
+    def get_queryset(self):
+        params = self.request.query_params
+        datas= School.objects.all()
+        if params.get('name', False):
+            datas= datas.filter(name = params.get('name'))
+        if params.get('location', False):
+            datas= datas.filter(location = params.get('location'))
+        return datas
+    
     # def get_serializer_class(self):
     #     # if self.action == 'list' or self.action == 'retrieve':
     #     #     return SchoolSerializer
