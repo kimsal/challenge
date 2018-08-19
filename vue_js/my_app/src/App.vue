@@ -42,15 +42,20 @@
   color: #5763b1;
 }
 .headline-white{
-  font-size:16px !important;
+  font-size:15px !important;
   font-weight: bold;
 }
 .headline-blue {
   color: blue;
   font-weight: bold;
-  font-size: 16px !important;
+  font-size: 15px !important;
 }
 .image-blur {
-
+  color: black;
+  background-color: black;
+}
+.date{
+  font-size: 12px;
+  font-weight: lighter;
 }
 </style>

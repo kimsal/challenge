@@ -39,14 +39,18 @@
             </v-btn>
             <v-card-media
               class="white--text image-blur"
-              height="170px"
-              contain
               :src="data.urlToImage"
             >
               <v-container fill-height fluid>
                 <v-layout>
-                  <v-flex xs12 align-end d-flex>
-                    <span v-bind:class="data.urlToImage ? 'headline-white' : 'headline-blue'">{{ data.title }}</span>
+                  <v-flex xs12 d-flex class="text-sm-left"> <!-- align-end-->
+                    <span v-bind:class="data.urlToImage ? 'headline-white' : 'headline-blue'">
+                      <span class="date">
+                        {{getFormatedDate(data.publishedAt)}}
+                      </span>
+                      <br/>
+                      {{ data.title }}
+                    </span>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -72,6 +76,7 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
+import moment from 'moment'
 export default {
   name: 'Home',
   data() {
@@ -104,6 +109,9 @@ export default {
     }
   },  
   methods: {
+    getFormatedDate(date){
+      return moment(date).format('DD MMM YYYY h:mm');
+    },  
     filterData: function (selected){
       // set state SelectedSource
       this.$store.dispatch('setSelectedSource', selected);

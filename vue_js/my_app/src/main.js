@@ -7,6 +7,9 @@ import router from './router';
 // import Vuetify from 'vuetify'
 import Vuetify from 'vuetify/dist/vuetify.min.js';
 import 'vuetify/dist/vuetify.min.css';
+import moment from 'moment'
+import VueMomentJS from 'vue-momentjs'
+
 import store from './store/index'
 
 import Vuex from 'vuex';
